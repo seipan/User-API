@@ -1,12 +1,14 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/seipan/User-API/domain/entity"
 )
 
 type UserRepository interface {
-	CreateUser(string, string, string) (*entity.User, error)
-	UpdateUser(string, string) (*entity.User, error)
-	GetUser(string) (*entity.User, error)
-	DeleteUser(string) (*entity.User, error)
+	CreateUser(context.Context, *entity.User) (*entity.User, error)
+	UpdateUser(context.Context, *entity.User) (*entity.User, error)
+	GetUser(ctx context.Context, id string) (*entity.User, error)
+	DeleteUser(ctx context.Context, id string) (*entity.User, error)
 }
