@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/Doer-org/geekten_vol4_2022/core/context"
+	"github.com/seipan/User-API/core/context"
 )
 
 func Context(h http.Handler) http.Handler {
