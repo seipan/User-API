@@ -11,16 +11,16 @@ services:
       - 8000:8000
     tty: true
     volumes:
-      - ./server:/go/src/github.com/Doer-org/geekten_vol4_2022
+      - ./server:/go/src/github.com/seipan/User-API
     depends_on:
       - db
     command: go run main.go
 
   db:
-    container_name: db-geekten_vol4_2022
+    container_name: db-user-api
     build:
       context: .
-      dockerfile: ./db/Dockerfile
+      dockerfile: ./build/Dockerfile
     ports:
       - 5432:5432
     volumes:
