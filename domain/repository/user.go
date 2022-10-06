@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/seipan/User-API/domain/entity"
+	"User-API/domain/entity"
 )
 
 type UserRepository interface {
