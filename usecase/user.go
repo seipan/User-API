@@ -11,7 +11,7 @@ import (
 type UserUsecase interface {
 	CreateUser(context.Context, *entity.User) (*entity.User, error)
 	UpdateUser(context.Context, *entity.User) (*entity.User, error)
-	GetUser(context.Context, string) (*entity.User, error)
+	GetUser(ctx context.Context, id string) (*entity.User, error)
 	DeleteUser(ctx context.Context, id string) (*entity.User, error)
 }
 
