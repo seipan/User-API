@@ -6,12 +6,12 @@ services:
       context: .
       dockerfile: ./build/Dockerfile
     env_file:
-      - docker-compose.env
+      - docker-compose-sample.env
     ports:
       - 8000:8000
     tty: true
     volumes:
-      - ./server:/go/src/github.com/seipan/User-API
+      - ./User-API:/go/src/github.com/seipan/User-API
     depends_on:
       - db
     command: go run main.go
@@ -20,12 +20,12 @@ services:
     container_name: db-user-api
     build:
       context: .
-      dockerfile: ./build/Dockerfile
+      dockerfile: ./db/Dockerfile
     ports:
       - 5432:5432
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
       - ./db/data:/var/lib/postgresql/data
     env_file:
-      - docker-compose.env
+      - docker-compose-sample.env
     restart: always
