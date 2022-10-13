@@ -18,6 +18,7 @@ func NewUserRepository(db *sql.DB) repository.UserRepository {
 }
 
 func (ur userRepository) CreateUser(context.Context, *entity.User) (*entity.User, error) {
+	statement := "INSERT INTO users VALUES($1,$2,$3)"
 	return nil, nil
 }
 
