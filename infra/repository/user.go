@@ -5,6 +5,7 @@ import (
 	"User-API/domain/repository"
 	"context"
 	"database/sql"
+	"log"
 )
 
 type userRepository struct {
@@ -17,9 +18,23 @@ func NewUserRepository(db *sql.DB) repository.UserRepository {
 	}
 }
 
-func (ur userRepository) CreateUser(context.Context, *entity.User) (*entity.User, error) {
+func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
 	statement := "INSERT INTO users VALUES($1,$2,$3)"
-	return nil, nil
+	stmt, err := ur.db.Prepare(statement)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.ExecContext(ctx, user.Id, user.Name, user.Mail)
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return lastInsertID, nil
 }
 
 func (ur userRepository) UpdateUser(context.Context, *entity.User) (*entity.User, error) {
