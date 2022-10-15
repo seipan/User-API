@@ -48,8 +48,34 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	return resuser, nil
 }
 
-func (ur userRepository) UpdateUser(context.Context, *entity.User) (*entity.User, error) {
-	return nil, nil
+func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
+	statement := "UPDATE users SET name = $2, mail = $3 WHERE id = $1"
+	stmt, err := ur.db.Prepare(statement)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.ExecContext(ctx, user.Id, user.Name, user.Name)
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	resId, err := res.LastInsertId()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	resuser := &entity.User{}
+	resuser.Id = resId
+	resuser.Name = user.Name
+	resuser.Mail = user.Mail
+
+	return resuser, nil
 }
 
 func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, error) {
