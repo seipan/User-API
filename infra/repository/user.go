@@ -3,6 +3,7 @@ package repository
 import (
 	"User-API/domain/entity"
 	"User-API/domain/repository"
+	db_error "User-API/error/db"
 	"context"
 	"database/sql"
 	"log"
@@ -79,7 +80,24 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 }
 
 func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, error) {
-	return nil, nil
+	statement := "SELECT * FROM users WHERE id = $1"
+
+	stmt, err := ur.db.Prepare(statement)
+	if err != nil {
+		log.Println(db_error.StatementError)
+		return nil, err
+	}
+	defer stmt.Close()
+	resuser := &entity.User{}
+
+	err = stmt.QueryRow(id).Scan(&resuser.Id, &resuser.Name, &resuser.Mail)
+
+	if err != nil {
+		log.Println(db_error.QueryError)
+		return nil, db_error.QueryError
+	}
+
+	return resuser, nil
 }
 
 func (ur userRepository) DeleteUser(ctx context.Context, id string) (*entity.User, error) {
