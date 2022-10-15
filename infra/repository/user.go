@@ -24,7 +24,7 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, db_error.StatementError
 	}
 	defer stmt.Close()
 
@@ -32,13 +32,13 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, db_error.ExecError
 	}
 
 	resId, err := res.LastInsertId()
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, db_error.LastIdError
 	}
 
 	resuser := &entity.User{}
@@ -54,7 +54,7 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, db_error.StatementError
 	}
 	defer stmt.Close()
 
@@ -62,13 +62,13 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, db_error.ExecError
 	}
 
 	resId, err := res.LastInsertId()
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, db_error.LastIdError
 	}
 
 	resuser := &entity.User{}
