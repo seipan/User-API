@@ -57,7 +57,7 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 	}
 	defer stmt.Close()
 
-	res, err := stmt.ExecContext(ctx, user.Id, user.Name, user.Name)
+	res, err := stmt.ExecContext(ctx, user.Id, user.Name, user.Mail)
 
 	if err != nil {
 		log.Println(err)
