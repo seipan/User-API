@@ -101,5 +101,20 @@ func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, 
 }
 
 func (ur userRepository) DeleteUser(ctx context.Context, id string) error {
+	statement := "DELETE FROM users WHERE id = $1"
+	stmt, err := ur.db.Prepare(statement)
+	if err != nil {
+		log.Println(err)
+		return db_error.StatementError
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(ctx, id)
+
+	if err != nil {
+		log.Println(err)
+		return db_error.ExecError
+	}
+
 	return nil
 }
