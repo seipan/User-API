@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 
-	"github.com/seipan/User-API/domain/entity"
+	"User-API/domain/entity"
 
-	"github.com/seipan/User-API/domain/repository"
+	"User-API/domain/repository"
 )
 
 type UserUsecase interface {
