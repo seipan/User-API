@@ -84,16 +84,16 @@ func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, 
 
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
-		log.Println(db_error.StatementError)
-		return nil, err
+		log.Println(err)
+		return nil, db_error.StatementError
 	}
 	defer stmt.Close()
 	resuser := &entity.User{}
 
-	err = stmt.QueryRow(id).Scan(&resuser.Id, &resuser.Name, &resuser.Mail)
+	err = stmt.QueryRowContext(ctx, id).Scan(&resuser.Id, &resuser.Name, &resuser.Mail)
 
 	if err != nil {
-		log.Println(db_error.QueryError)
+		log.Println(err)
 		return nil, db_error.QueryError
 	}
 
