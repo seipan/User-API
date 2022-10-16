@@ -100,6 +100,6 @@ func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, 
 	return resuser, nil
 }
 
-func (ur userRepository) DeleteUser(ctx context.Context, id string) (*entity.User, error) {
-	return nil, nil
+func (ur userRepository) DeleteUser(ctx context.Context, id string) error {
+	return nil
 }

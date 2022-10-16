@@ -12,7 +12,7 @@ type UserUsecase interface {
 	CreateUser(context.Context, *entity.User) (*entity.User, error)
 	UpdateUser(context.Context, *entity.User) (*entity.User, error)
 	GetUser(ctx context.Context, id string) (*entity.User, error)
-	DeleteUser(ctx context.Context, id string) (*entity.User, error)
+	DeleteUser(ctx context.Context, id string) error
 }
 
 type userUsecase struct {
@@ -40,7 +40,7 @@ func (ur userUsecase) GetUser(ctx context.Context, id string) (*entity.User, err
 	return user, err
 }
 
-func (ur userUsecase) DeleteUser(ctx context.Context, id string) (*entity.User, error) {
-	user, err := ur.userRepository.DeleteUser(ctx, id)
-	return user, err
+func (ur userUsecase) DeleteUser(ctx context.Context, id string) error {
+	err := ur.userRepository.DeleteUser(ctx, id)
+	return err
 }
