@@ -51,7 +51,7 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 }
 
 func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
-	statement := "UPDATE users SET name = $2, mail = $3 WHERE id = $1"
+	statement := "UPDATE users SET name = $2, mail = $3 , password = $4 WHERE id = $1"
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
 		log.Println(err)
@@ -59,7 +59,7 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 	}
 	defer stmt.Close()
 
-	res, err := stmt.ExecContext(ctx, user.Id, user.Name, user.Mail)
+	res, err := stmt.ExecContext(ctx, user.Id, user.Name, user.Mail, user.PassWord)
 
 	if err != nil {
 		log.Println(err)
@@ -76,6 +76,7 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 	resuser.Id = resId
 	resuser.Name = user.Name
 	resuser.Mail = user.Mail
+	resuser.PassWord = user.PassWord
 
 	return resuser, nil
 }
