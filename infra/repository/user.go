@@ -20,7 +20,7 @@ func NewUserRepository(db *sql.DB) repository.UserRepository {
 }
 
 func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
-	statement := "INSERT INTO users (name,mail) VALUES($1,$2)"
+	statement := "INSERT INTO users (name,mail,password) VALUES($1,$2,$3)"
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
 		log.Println(err)
@@ -28,7 +28,7 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	}
 	defer stmt.Close()
 
-	res, err := stmt.ExecContext(ctx, user.Name, user.Mail)
+	res, err := stmt.ExecContext(ctx, user.Name, user.Mail, user.PassWord)
 
 	if err != nil {
 		log.Println(err)
@@ -45,6 +45,7 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	resuser.Id = resId
 	resuser.Name = user.Name
 	resuser.Mail = user.Mail
+	resuser.PassWord = user.PassWord
 
 	return resuser, nil
 }
