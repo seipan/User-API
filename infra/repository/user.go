@@ -20,7 +20,7 @@ func NewUserRepository(db *sql.DB) repository.UserRepository {
 }
 
 func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
-	statement := "INSERT INTO users (name,mail,password) VALUES($1,$2,$3)"
+	statement := "INSERT INTO users (name,mail) VALUES($1,$2)"
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
 		log.Println(err)
@@ -28,7 +28,7 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	}
 	defer stmt.Close()
 
-	res, err := stmt.ExecContext(ctx, user.Name, user.Mail, user.PassWord)
+	res, err := stmt.ExecContext(ctx, user.Name, user.Mail)
 
 	if err != nil {
 		log.Println(err)
@@ -51,7 +51,7 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 }
 
 func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
-	statement := "UPDATE users SET name = $2, mail = $3 , password = $4 WHERE id = $1"
+	statement := "UPDATE users SET name = $2, mail = $3 WHERE id = $1"
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
 		log.Println(err)
@@ -59,7 +59,7 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 	}
 	defer stmt.Close()
 
-	res, err := stmt.ExecContext(ctx, user.Id, user.Name, user.Mail, user.PassWord)
+	res, err := stmt.ExecContext(ctx, user.Id, user.Name, user.Mail)
 
 	if err != nil {
 		log.Println(err)
