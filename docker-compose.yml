@@ -16,16 +16,29 @@ services:
       - db
     command: go run main.go
 
-  db:
-    container_name: db-user-api
-    build:
-      context: .
-      dockerfile: ./db/Dockerfile
+  postgres:
+    image: postgres
+    container_name: postgres
     ports:
-      - 5432:5432
-    volumes:
-      - ./db/init:/docker-entrypoint-initdb.d
-      - ./db/data:/var/lib/postgresql/data
-    env_file:
-      - docker-compose-sample.env
+      - 5555:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+    tty: true
     restart: always
+    user: root
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - /etc/localtime:/etc/localtime:ro
+  pgweb:
+    image: sosedoff/pgweb
+    container_name: pgweb
+    ports: 
+      - "8081:8081"
+    environment:
+      - DATABASE_URL=postgres://root:password@postgres:5432/testdb?sslmode=disable
+    links: 
+      - postgres:postgres
+    restart: always
+    depends_on:
+      - postgres
