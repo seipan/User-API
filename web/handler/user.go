@@ -26,10 +26,13 @@ func (uh userHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uh userHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func (uh userHandler) GetUser(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func (uh userHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+
 }
