@@ -5,6 +5,8 @@ import (
 	handler_error "User-API/error/handler"
 	"User-API/usecase"
 	"User-API/utils"
+	"User-API/web/response"
+	"encoding/json"
 	"net/http"
 	"strconv"
 )
@@ -69,6 +71,18 @@ func (uh userHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateErrorResponse(w, r, "faild to createuser", err)
 		return
 	}
+
+	resUser := response.NewUserResponse(user)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	je := json.NewEncoder(w)
+	if err := je.Encode(resUser); err != nil {
+		utils.CreateErrorResponse(w, r, "json encode error", err)
+		return
+	}
+
 }
 
 func (uh userHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
