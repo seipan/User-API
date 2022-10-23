@@ -28,7 +28,7 @@ services:
     restart: always
     user: root
     volumes:
-      - ./init:/docker-entrypoint-initdb.d
+      - .db/init:/docker-entrypoint-initdb.d
       - /etc/localtime:/etc/localtime:ro
   pgweb:
     image: sosedoff/pgweb

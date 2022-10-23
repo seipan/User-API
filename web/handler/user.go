@@ -86,7 +86,45 @@ func (uh userHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uh userHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPut {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		utils.CreateErrorResponse(w, r, "method not allowed", handler_error.MethodNotAllowd)
+		return
+	}
 
+	newName := r.FormValue("name")
+	if newName == "" {
+		utils.CreateErrorResponse(w, r, "name empty", nil)
+		return
+	}
+
+	newMail := r.FormValue("mail")
+	if newMail == "" {
+		utils.CreateErrorResponse(w, r, "id empty", nil)
+		return
+	}
+
+	newUser := &entity.User{}
+	newUser.Name = newName
+	newUser.Mail = newMail
+
+	user, err := uh.userUsecase.UpdateUser(r.Context(), newUser)
+
+	if err != nil {
+		utils.CreateErrorResponse(w, r, "faild to updateuser", err)
+		return
+	}
+
+	resUser := response.NewUserResponse(user)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	je := json.NewEncoder(w)
+	if err := je.Encode(resUser); err != nil {
+		utils.CreateErrorResponse(w, r, "json encode error", err)
+		return
+	}
 }
 
 func (uh userHandler) GetUser(w http.ResponseWriter, r *http.Request) {
