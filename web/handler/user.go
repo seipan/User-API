@@ -128,7 +128,17 @@ func (uh userHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uh userHandler) GetUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		utils.CreateErrorResponse(w, r, "method not allowed", handler_error.MethodNotAllowd)
+		return
+	}
 
+	newId := r.FormValue("id")
+	if newId == "" {
+		utils.CreateErrorResponse(w, r, "id empty", nil)
+		return
+	}
 }
 
 func (uh userHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {

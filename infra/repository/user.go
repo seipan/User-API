@@ -81,7 +81,7 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 	return resuser, nil
 }
 
-func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, error) {
+func (ur userRepository) GetUser(ctx context.Context, id int64) (*entity.User, error) {
 	statement := "SELECT * FROM users WHERE id = $1"
 
 	stmt, err := ur.db.Prepare(statement)
@@ -102,7 +102,7 @@ func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, 
 	return resuser, nil
 }
 
-func (ur userRepository) DeleteUser(ctx context.Context, id string) error {
+func (ur userRepository) DeleteUser(ctx context.Context, id int64) error {
 	statement := "DELETE FROM users WHERE id = $1"
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
