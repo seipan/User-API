@@ -139,6 +139,31 @@ func (uh userHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 		utils.CreateErrorResponse(w, r, "id empty", nil)
 		return
 	}
+
+	newintId, err := strconv.ParseInt(newId, 10, 64)
+
+	if err != nil {
+		utils.CreateErrorResponse(w, r, "id not number", nil)
+		return
+	}
+
+	user, err := uh.userUsecase.GetUser(r.Context(), newintId)
+
+	if err != nil {
+		utils.CreateErrorResponse(w, r, "faild to getuser", err)
+		return
+	}
+
+	resUser := response.NewUserResponse(user)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	je := json.NewEncoder(w)
+	if err := je.Encode(resUser); err != nil {
+		utils.CreateErrorResponse(w, r, "json encode error", err)
+		return
+	}
 }
 
 func (uh userHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
