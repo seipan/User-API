@@ -45,7 +45,6 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	resuser.Id = resId
 	resuser.Name = user.Name
 	resuser.Mail = user.Mail
-	resuser.PassWord = user.PassWord
 
 	return resuser, nil
 }
@@ -76,7 +75,6 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 	resuser.Id = resId
 	resuser.Name = user.Name
 	resuser.Mail = user.Mail
-	resuser.PassWord = user.PassWord
 
 	return resuser, nil
 }
