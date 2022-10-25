@@ -12,6 +12,6 @@ func NewUserResponse(user *entity.User) UserResponse {
 
 type UserResponse struct {
 	Name string `json:"name"`
-	Id   int64  `json:"id"`
+	Id   string `json:"id"`
 	Mail string `json:"mail"`
 }

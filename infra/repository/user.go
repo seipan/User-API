@@ -28,21 +28,15 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	}
 	defer stmt.Close()
 
-	res, err := stmt.ExecContext(ctx, user.Name, user.Mail)
+	_, err = stmt.ExecContext(ctx, user.Name, user.Mail)
 
 	if err != nil {
 		log.Println(err)
 		return nil, db_error.ExecError
 	}
 
-	resId, err := res.LastInsertId()
-	if err != nil {
-		log.Println(err)
-		return nil, db_error.LastIdError
-	}
-
 	resuser := &entity.User{}
-	resuser.Id = resId
+	resuser.Id = user.Id
 	resuser.Name = user.Name
 	resuser.Mail = user.Mail
 
@@ -58,28 +52,22 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 	}
 	defer stmt.Close()
 
-	res, err := stmt.ExecContext(ctx, user.Id, user.Name, user.Mail)
+	_, err = stmt.ExecContext(ctx, user.Id, user.Name, user.Mail)
 
 	if err != nil {
 		log.Println(err)
 		return nil, db_error.ExecError
 	}
 
-	resId, err := res.LastInsertId()
-	if err != nil {
-		log.Println(err)
-		return nil, db_error.LastIdError
-	}
-
 	resuser := &entity.User{}
-	resuser.Id = resId
+	resuser.Id = user.Id
 	resuser.Name = user.Name
 	resuser.Mail = user.Mail
 
 	return resuser, nil
 }
 
-func (ur userRepository) GetUser(ctx context.Context, id int64) (*entity.User, error) {
+func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, error) {
 	statement := "SELECT * FROM users WHERE id = $1"
 
 	stmt, err := ur.db.Prepare(statement)
@@ -100,7 +88,7 @@ func (ur userRepository) GetUser(ctx context.Context, id int64) (*entity.User, e
 	return resuser, nil
 }
 
-func (ur userRepository) DeleteUser(ctx context.Context, id int64) error {
+func (ur userRepository) DeleteUser(ctx context.Context, id string) error {
 	statement := "DELETE FROM users WHERE id = $1"
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {

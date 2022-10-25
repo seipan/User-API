@@ -1,7 +1,7 @@
 package entity
 
 type User struct {
-	Id   int64
+	Id   string
 	Name string
 	Mail string
 }
