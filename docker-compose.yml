@@ -1,44 +1,32 @@
 version: '3'
 services:
   server:
-    container_name: server-user-api
+    container_name: user-api
     build:
       context: .
-      dockerfile: .Dockerfile
+      dockerfile: Dockerfile
     env_file:
       - docker-compose-sample.env
     ports:
       - 8000:8000
     tty: true
     volumes:
-      - ./User-API:/go/src/github.com/seipan/User-API
+      - .:/go/src/User-API
     depends_on:
       - db
     command: go run main.go
 
-  postgres:
+  db:
     image: postgres
     container_name: postgres
     ports:
       - 5555:5432
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=hoge
+      - POSTGRES_PASSWORD=hoge
     tty: true
     restart: always
     user: root
     volumes:
-      - .db/init:/docker-entrypoint-initdb.d
+      - ./db/init:/docker-entrypoint-initdb.d
       - /etc/localtime:/etc/localtime:ro
-  pgweb:
-    image: sosedoff/pgweb
-    container_name: pgweb
-    ports: 
-      - "8081:8081"
-    environment:
-      - DATABASE_URL=postgres://root:password@postgres:5432/testdb?sslmode=disable
-    links: 
-      - postgres:postgres
-    restart: always
-    depends_on:
-      - postgres
