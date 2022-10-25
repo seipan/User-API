@@ -1,21 +1,5 @@
 version: '3'
 services:
-  server:
-    container_name: user-api
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file:
-      - docker-compose-sample.env
-    ports:
-      - 8000:8000
-    tty: true
-    volumes:
-      - .:/go/src/User-API
-    depends_on:
-      - postgres
-    command: go run main.go
-
   postgres:
     image: postgres
     container_name: postgres
