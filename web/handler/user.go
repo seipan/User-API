@@ -84,6 +84,12 @@ func (uh userHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	newId := r.FormValue("id")
+	if newId == "" {
+		utils.CreateErrorResponse(w, r, "id empty", 400, nil)
+		return
+	}
+
 	newName := r.FormValue("name")
 	if newName == "" {
 		utils.CreateErrorResponse(w, r, "name empty", 400, nil)
@@ -97,6 +103,7 @@ func (uh userHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newUser := &entity.User{}
+	newUser.Id = newId
 	newUser.Name = newName
 	newUser.Mail = newMail
 
