@@ -13,17 +13,18 @@ services:
     volumes:
       - .:/go/src/User-API
     depends_on:
-      - db
+      - postgres
     command: go run main.go
 
-  db:
+  postgres:
     image: postgres
     container_name: postgres
     ports:
       - 5555:5432
     environment:
-      - POSTGRES_USER=hoge
-      - POSTGRES_PASSWORD=hoge
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: hoge
+      POSTGRES_DB: hoge
     tty: true
     restart: always
     user: root
