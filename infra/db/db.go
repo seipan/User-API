@@ -15,5 +15,10 @@ func NewDriver() *sql.DB {
 	}
 	log.Println("db connect success")
 
+	err = db.Ping()
+	if err != nil {
+		log.Println("db connect failed")
+	}
+
 	return db
 }
