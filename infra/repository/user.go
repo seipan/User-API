@@ -28,15 +28,17 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	}
 	defer stmt.Close()
 
-	_, err = stmt.ExecContext(ctx, user.Name, user.Mail)
+	res, err := stmt.ExecContext(ctx, user.Name, user.Mail)
 
 	if err != nil {
 		log.Println(err)
 		return nil, db_error.ExecError
 	}
 
+	id, err := res.LastInsertId()
+
 	resuser := &entity.User{}
-	resuser.Id = user.Id
+	resuser.Id = id
 	resuser.Name = user.Name
 	resuser.Mail = user.Mail
 
