@@ -7,4 +7,7 @@ require (
 	github.com/seipan/User-API v0.0.0-20221004172817-6dd1536f4b31
 )
 
-require github.com/mileusna/useragent v1.2.1 // indirect
+require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
+	github.com/mileusna/useragent v1.2.1 // indirect
+)
