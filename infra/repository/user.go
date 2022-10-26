@@ -20,7 +20,7 @@ func NewUserRepository(db *sql.DB) repository.UserRepository {
 }
 
 func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
-	statement := "INSERT INTO users VALUES($1,$2,$3)"
+	statement := "INSERT INTO users (name,mail) VALUES($1,$2)"
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
 		log.Println(err)
@@ -28,7 +28,7 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	}
 	defer stmt.Close()
 
-	_, err = stmt.ExecContext(ctx, user.Id, user.Name, user.Mail)
+	_, err = stmt.ExecContext(ctx, user.Name, user.Mail)
 
 	if err != nil {
 		log.Println(err)
@@ -67,7 +67,7 @@ func (ur userRepository) UpdateUser(ctx context.Context, user *entity.User) (*en
 	return resuser, nil
 }
 
-func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, error) {
+func (ur userRepository) GetUser(ctx context.Context, id int64) (*entity.User, error) {
 	statement := "SELECT * FROM users WHERE id = $1"
 
 	stmt, err := ur.db.Prepare(statement)
@@ -88,7 +88,7 @@ func (ur userRepository) GetUser(ctx context.Context, id string) (*entity.User, 
 	return resuser, nil
 }
 
-func (ur userRepository) DeleteUser(ctx context.Context, id string) error {
+func (ur userRepository) DeleteUser(ctx context.Context, id int64) error {
 	statement := "DELETE FROM users WHERE id = $1"
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {

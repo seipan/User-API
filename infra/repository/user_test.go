@@ -13,19 +13,19 @@ import (
 func Test_UserCreate(t *testing.T) {
 	tests := []struct {
 		name    string
-		id      string
+		id      int64
 		mail    string
 		wantErr error
 	}{
 		{
 			name:    "存在しないIDは作成できる",
-			id:      "1",
+			id:      1,
 			mail:    "test@test.com",
 			wantErr: nil,
 		},
 		{
 			name:    "存在するIDは作成できない",
-			id:      "1",
+			id:      1,
 			mail:    "test@test.com",
 			wantErr: db_error.QueryError,
 		},

@@ -8,6 +8,7 @@ import (
 	"User-API/web/response"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 type UserHandler interface {
@@ -40,12 +41,6 @@ func (uh userHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newId := r.FormValue("id")
-	if newId == "" {
-		utils.CreateErrorResponse(w, r, "id empty", 400, nil)
-		return
-	}
-
 	newMail := r.FormValue("mail")
 	if newMail == "" {
 		utils.CreateErrorResponse(w, r, "id empty", 400, nil)
@@ -53,7 +48,6 @@ func (uh userHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newUser := &entity.User{}
-	newUser.Id = newId
 	newUser.Name = newName
 	newUser.Mail = newMail
 
@@ -90,6 +84,12 @@ func (uh userHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	newintId, err := strconv.ParseInt(newId, 10, 64)
+	if err != nil {
+		utils.CreateErrorResponse(w, r, "id not number", 400, nil)
+		return
+	}
+
 	newName := r.FormValue("name")
 	if newName == "" {
 		utils.CreateErrorResponse(w, r, "name empty", 400, nil)
@@ -103,7 +103,7 @@ func (uh userHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newUser := &entity.User{}
-	newUser.Id = newId
+	newUser.Id = newintId
 	newUser.Name = newName
 	newUser.Mail = newMail
 
@@ -139,7 +139,13 @@ func (uh userHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := uh.userUsecase.GetUser(r.Context(), newId)
+	newintId, err := strconv.ParseInt(newId, 10, 64)
+	if err != nil {
+		utils.CreateErrorResponse(w, r, "id not number", 400, nil)
+		return
+	}
+
+	user, err := uh.userUsecase.GetUser(r.Context(), newintId)
 
 	if err != nil {
 		utils.CreateErrorResponse(w, r, "faild to getuser", 204, err)
@@ -171,7 +177,13 @@ func (uh userHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := uh.userUsecase.DeleteUser(r.Context(), newId)
+	newintId, err := strconv.ParseInt(newId, 10, 64)
+	if err != nil {
+		utils.CreateErrorResponse(w, r, "id not number", 400, nil)
+		return
+	}
+
+	err = uh.userUsecase.DeleteUser(r.Context(), newintId)
 
 	if err != nil {
 		utils.CreateErrorResponse(w, r, "faild to getuser", 204, err)
