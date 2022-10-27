@@ -24,7 +24,7 @@ func (ur userRepository) CreateUser(ctx context.Context, user *entity.User) (*en
 	stmt, err := ur.db.Prepare(statement)
 	if err != nil {
 		log.Println(err)
-		return nil, db_error.StatementError
+		return nil, err
 	}
 	defer stmt.Close()
 
