@@ -7,6 +7,7 @@ import (
 	"User-API/utils"
 	"User-API/web/response"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -35,7 +36,12 @@ func (uh userHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(r.Body)
+
 	newName := r.FormValue("name")
+
+	log.Println(newName)
+
 	if newName == "" {
 		utils.CreateErrorResponse(w, r, "name empty", 400, nil)
 		return
