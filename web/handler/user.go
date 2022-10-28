@@ -36,8 +36,6 @@ func (uh userHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(r.Body)
-
 	newName := r.FormValue("name")
 
 	log.Println(newName)
