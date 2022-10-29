@@ -26,7 +26,8 @@ func Test_UserCreate(t *testing.T) {
 				t.Error(err.Error())
 			}
 			defer db_test.Close()
-			mock.ExpectExec(regexp.QuoteMeta("INSERT INTO users (name,mail) VALUES($1,$2) RETURNING id")).
+			mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO users")).
+				ExpectExec().
 				WithArgs(testuser.Name, testuser.Mail).
 				WillReturnResult(sqlmock.NewResult(1, 1))
 
