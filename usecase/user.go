@@ -38,6 +38,13 @@ func (ur userUsecase) CreateUser(ctx context.Context, user *entity.User) (*entit
 }
 
 func (ur userUsecase) UpdateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
+	if user.Name == "" {
+		return nil, usecase.NameEmptyError
+	}
+	if user.Mail == "" {
+		return nil, usecase.MailEmptyError
+	}
+
 	user, err := ur.userRepository.UpdateUser(ctx, user)
 	return user, err
 }
