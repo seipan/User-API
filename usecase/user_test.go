@@ -2,57 +2,60 @@ package usecase
 
 import (
 	"User-API/domain/entity"
+	"User-API/error/usecase"
 	"context"
-	"net/http"
 	"testing"
 )
 
 func Test_CreateUser(t *testing.T) {
 	tests := []struct {
-		name      string
-		reqBody   string
-		reqMethod string
-		reqname   string
-		reqmail   string
-		wantCode  int
-		wantBody  string
+		name    string
+		reqname string
+		reqmail string
+		wantErr error
 	}{
 		{
-			name:      "正常に動作した場合",
-			reqBody:   `{"name":"hoge","mail":"hoge@hoge.com"}`,
-			wantCode:  http.StatusOK,
-			reqname:   "hoge",
-			reqmail:   "hoge@hoge.com",
-			reqMethod: http.MethodPost,
-			wantBody:  `{"name":"hoge","id":1,"mail":"hoge@hoge.com"}`,
+			name:    "正常に動作した場合",
+			reqname: "hoge",
+			reqmail: "hoge@hoge.com",
+			wantErr: nil,
 		},
 		{
-			name:      "request bodyが空だった場合、400エラーになる",
-			reqBody:   ``,
-			wantCode:  200,
-			reqname:   "",
-			reqmail:   "",
-			reqMethod: http.MethodPost,
-			wantBody:  `{"Status":400,"Result":"name empty"}`,
+			name:    "nameが空なら name empty error",
+			reqname: "",
+			reqmail: "hoge@hoge.com",
+			wantErr: usecase.NameEmptyError,
 		},
 		{
-			name:      "POSTリクエスト以外は 404 ",
-			reqBody:   `{"name":"hoge","mail":"hoge@hoge.com"}`,
-			wantCode:  405,
-			reqname:   "hoge",
-			reqmail:   "hoge@hoge.com",
-			reqMethod: http.MethodGet,
-			wantBody:  `{"Status":404,"Result":"method not allowed"}`,
+			name:    "mailが空なら  empty error",
+			reqname: "hoge",
+			reqmail: "",
+			wantErr: usecase.MailEmptyError,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			userUsecase := NewUserUsecase(&UserRepositoryMock{})
 
-			if tt.wantCode != w.Code {
-				t.Errorf("TestHandler_CreateTask code Error : want %d but got %d", tt.wantCode, w.Code)
+			user := &entity.User{}
+			user.Name = tt.reqname
+			user.Mail = tt.reqmail
+			ctx := context.Background()
+
+			resuser, err := userUsecase.CreateUser(ctx, user)
+
+			if err != tt.wantErr {
+				t.Errorf("TestHandler_CreateTask code Error : want %s but got %s", tt.wantErr, err)
 			}
 
+			if resuser != nil && resuser.Mail != user.Mail {
+				t.Errorf("TestHandler_CreateTask code Error : want %s but got %s", user.Mail, resuser.Mail)
+			}
+
+			if resuser != nil && resuser.Name != user.Name {
+				t.Errorf("TestHandler_CreateTask code Error : want %s but got %s", user.Name, resuser.Name)
+			}
 		})
 	}
 }
