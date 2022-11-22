@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"log"
 
 	"User-API/domain/entity"
 	"User-API/error/usecase"
@@ -28,17 +27,13 @@ func NewUserUsecase(ur repository.UserRepository) UserUsecase {
 }
 
 func (ur userUsecase) CreateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
-	log.Println("1")
 	if user.Name == "" {
 		return nil, usecase.NameEmptyError
 	}
-	log.Println("2")
 	if user.Mail == "" {
 		return nil, usecase.MailEmptyError
 	}
-	log.Println("3")
 	user, err := ur.userRepository.CreateUser(ctx, user)
-	log.Println("4")
 	return user, err
 }
 
