@@ -10,7 +10,16 @@ import (
 	"github.com/ory/dockertest"
 )
 
-func createContainer() (*dockertest.Resource, *dockertest.Pool) {
+var (
+	user     = "root"
+	password = "hoge"
+	dbName   = "hoge"
+	port     = "5433"
+	dialect  = "postgres"
+	dsn      = "postgres://%s:%s@localhost:%s/%s?sslmode=disable"
+)
+
+func CreateContainer() (*dockertest.Resource, *dockertest.Pool) {
 	// Dockerコンテナへのファイルマウント時に絶対パスが必要
 	pwd, _ := os.Getwd()
 	log.Println(pwd)
@@ -47,14 +56,14 @@ func createContainer() (*dockertest.Resource, *dockertest.Pool) {
 	return resource, pool
 }
 
-func closeContainer(resource *dockertest.Resource, pool *dockertest.Pool) {
+func CloseContainer(resource *dockertest.Resource, pool *dockertest.Pool) {
 	// コンテナの終了
 	if err := pool.Purge(resource); err != nil {
 		log.Fatalf("Could not purge resource: %s", err)
 	}
 }
 
-func connectDB(resource *dockertest.Resource, pool *dockertest.Pool) *sql.DB {
+func ConnectDB(resource *dockertest.Resource, pool *dockertest.Pool) *sql.DB {
 	// DB(コンテナ)との接続
 	var db *sql.DB
 	if err := pool.Retry(func() error {
@@ -62,7 +71,7 @@ func connectDB(resource *dockertest.Resource, pool *dockertest.Pool) *sql.DB {
 		time.Sleep(time.Second * 10)
 
 		var err error
-		db, err = sql.Open("postgres", "host=127.0.0.1 port=5555 user=root password=hoge dbname=hoge sslmode=disable")
+		db, err = sql.Open("postgres", dsn)
 		if err != nil {
 			return err
 		}
